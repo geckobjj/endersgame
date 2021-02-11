@@ -8,6 +8,7 @@ import java.util.Random;
 import java.util.stream.Collectors;
 
 public class HelperUtils {
+
     /**
      * Moves a Unit one step closer to the target Tile
      * @param unit
@@ -78,28 +79,6 @@ public class HelperUtils {
             unit.move(Direction.WEST);
         }
         else {
-            /*
-            if(unit.tile.getAdjacentTile(Direction.NORTH).isPresent()){
-                if(unit.tile.getAdjacentTile(Direction.NORTH).get().canReceiveUnit()) {
-                    unit.move(Direction.NORTH);
-                }
-                else {
-                    unit.move(Direction.SOUTH);
-                }
-            }
-            else {
-                unit.move(Direction.SOUTH);
-            }
-            // So I came up with this contingency tile to try to escape being trapped in
-            // an east to west row...  It doesn't work well at all...
-            /*
-            Tile contingencyTile = unit.tile.getAdjacentTiles().stream()
-                    .filter(Tile::canReceiveUnit)
-                    .findFirst()
-                    .get();
-            moveUnit(unit, contingencyTile);*/
-            // This was the better Random code, but let's try something simpler.
-
             Random random = new Random();
             List<Tile> availableTiles = unit.tile.getAdjacentTiles()
                     .stream()
@@ -135,12 +114,28 @@ public class HelperUtils {
         return (ArrayList<Unit>) grid.getUnits(me).stream().filter(unit -> unit.type== unitType).collect(Collectors.toList());
     }
 
-    public static String generateSalt() {
-        Random random = new Random();
-        StringBuffer buffer = new StringBuffer();
-        for(int i = 0; i < 6; i++) {
-            buffer.append((char)(random.nextInt(122-97)+97));
+    /**
+     * Calculate which adjacent tile is closest to a unit
+     * @param unit
+     * @param centerTile
+     * @return
+     */
+    public static Tile targetAdjacentTile(Unit unit, Tile centerTile) {
+        List<Tile> adjacentTiles = new ArrayList<>();
+        for(Tile tile : centerTile.getAdjacentTiles()) {
+            if (tile.canReceiveUnit() || tile.entity.get().equals(unit)) {
+                adjacentTiles.add(tile);
+            }
         }
-        return buffer.toString();
+        Tile closestTile = adjacentTiles.get(0);
+        double distance = calculateTileDistance(unit.tile, closestTile);
+        for (Tile tile : adjacentTiles) {
+            double tileDistance = calculateTileDistance(unit.tile, tile);
+            if (tileDistance < distance) {
+                closestTile = tile;
+                distance = tileDistance;
+            }
+        }
+        return closestTile;
     }
 }

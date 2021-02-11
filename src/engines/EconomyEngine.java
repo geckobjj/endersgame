@@ -15,7 +15,6 @@ public class EconomyEngine implements Engine{
     List<Unit> workers;
     Grid grid;
     Base base;
-    Player me;
 
 
     private EconomyEngine() {
@@ -57,7 +56,7 @@ public class EconomyEngine implements Engine{
     }
 
     private void runEconomy(int dollars, Base base, List<Unit> workers) {
-        if(workers.stream().count() < 2) {
+        if(workers.size() < 2) {
             if(dollars >= 10) {
                 base.construct(UnitType.WORKER);
             }
@@ -101,24 +100,7 @@ public class EconomyEngine implements Engine{
         }
         else {
             //Target a tile adjacent to the base
-            Tile baseTile = base.tile;
-            //List<Tile> baseTiles = baseTile.getAdjacentTiles().stream().filter(Tile::canReceiveUnit).collect(Collectors.toList());
-            List<Tile> baseTiles = new ArrayList<Tile>();
-            for(Tile tile : baseTile.getAdjacentTiles()) {
-                if (tile.canReceiveUnit() || tile.entity.get().equals(unit)) {
-                    baseTiles.add(tile);
-                }
-            }
-            targetTile = baseTiles.get(0);
-            // Get closest tile to the player.
-            double distance = calculateTileDistance(unit.tile, targetTile);
-            for(Tile tile : baseTiles) {
-                double tileDistance = calculateTileDistance(unit.tile, tile);
-                if (tileDistance < distance) {
-                    targetTile = tile;
-                    distance = tileDistance;
-                }
-            }
+            targetTile = targetAdjacentTile(unit, base.tile);
         }
         return targetTile;
     }

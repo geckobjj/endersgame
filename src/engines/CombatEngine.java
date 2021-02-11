@@ -2,7 +2,6 @@ package engines;
 
 import com.ender.game.model.*;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import static utilities.HelperUtils.*;
@@ -49,25 +48,7 @@ public class CombatEngine implements Engine{
     }
 
     private Tile determineWarriorTargetTile(Unit warrior) {
-        Tile targetTile = null;
-        Tile enemyBase = findEnemyBase();
-        List<Tile> baseTiles = new ArrayList<Tile>();
-        for(Tile tile : enemyBase.getAdjacentTiles()) {
-            if (tile.canReceiveUnit() || tile.entity.get().equals(warrior)) {
-                baseTiles.add(tile);
-            }
-        }
-        targetTile = baseTiles.get(0);
-        double distance = calculateTileDistance(warrior.tile, targetTile);
-        for(Tile tile : baseTiles) {
-            double tileDistance = calculateTileDistance(warrior.tile, tile);
-            if (tileDistance < distance) {
-                targetTile = tile;
-                distance = tileDistance;
-            }
-        }
-        return targetTile;
-        //return enemyBase.getAdjacentTiles().get(0);
+        return targetAdjacentTile(warrior, findEnemyBase());
     }
 
     /**
