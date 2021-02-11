@@ -9,6 +9,7 @@ import java.util.stream.Collectors;
 
 import static utilities.HelperUtils.*;
 
+//TODO Calculate node value for worker prioritization based on distance and value
 public class EconomyEngine implements Engine{
 
     private static EconomyEngine economyEngine = null;

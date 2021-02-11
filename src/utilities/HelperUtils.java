@@ -8,6 +8,8 @@ import java.util.Random;
 import java.util.stream.Collectors;
 
 //TODO Moving workers need to recognize one another and avoid graciously.
+//TODO Calculate paths (no used paths) (different to and from trips)
+//TODO Implement A*
 public class HelperUtils {
 
     /**
