@@ -4,6 +4,7 @@ import com.ender.game.model.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static utilities.HelperUtils.*;
@@ -97,25 +98,11 @@ public class EconomyEngine implements Engine{
         // Check to see if worker is carrying resources
         if(isMissingCargo(worker)) {
 
-            // Target a tile with resources
+            // Target a tile with resources.
+            // If all resources are mined, set target to block the base.
             List<Tile> resourceTiles = findResources(grid);
-            List<Tile> goldTiles = resourceTiles.stream()
-                    .filter(tile -> tile.resourceType.get() == Tile.Resource.GOLD).collect(Collectors.toList());
-            List<Tile> silverTiles = resourceTiles.stream()
-                    .filter(tile -> tile.resourceType.get() == Tile.Resource.SILVER).collect(Collectors.toList());
-            List<Tile> copperTiles = resourceTiles.stream()
-                    .filter(tile -> tile.resourceType.get() == Tile.Resource.COPPER).collect(Collectors.toList());
-
-            // Set priority
-            if (!goldTiles.isEmpty()) {
-                targetTile = goldTiles.get(0);
-            }
-            else if (!silverTiles.isEmpty()) {
-                targetTile = silverTiles.get(0);
-            }
-            else {
-                targetTile = copperTiles.get(0);
-            }
+            Optional<Tile> resourceTile = targetHighValueResource(findResources(grid));
+            targetTile = resourceTile.orElseGet(() -> targetAdjacentTile(worker, base.tile));
         }
         else {
             //Target a tile adjacent to the base to deposit resources
@@ -136,6 +123,32 @@ public class EconomyEngine implements Engine{
                 resources.add(tile);
         }
         return resources;
+    }
+
+    /**
+     * Prioritizes resources in order of value (not distance)
+     * @param resourceTiles List of all tiles containing resources
+     * @return Optional of a Tile with the highest resource value
+     */
+    private Optional<Tile> targetHighValueResource(List<Tile> resourceTiles) {
+        List<Tile> goldTiles = resourceTiles.stream()
+                .filter(tile -> tile.resourceType.get() == Tile.Resource.GOLD).collect(Collectors.toList());
+        List<Tile> silverTiles = resourceTiles.stream()
+                .filter(tile -> tile.resourceType.get() == Tile.Resource.SILVER).collect(Collectors.toList());
+        List<Tile> copperTiles = resourceTiles.stream()
+                .filter(tile -> tile.resourceType.get() == Tile.Resource.COPPER).collect(Collectors.toList());
+
+        // Return based on priority of value
+        if (!goldTiles.isEmpty()) {
+            return Optional.of(goldTiles.get(0));
+        }
+        else if (!silverTiles.isEmpty()) {
+            return Optional.of(silverTiles.get(0));
+        }
+        else if (!copperTiles.isEmpty()) {
+            return Optional.of(copperTiles.get(0));
+        }
+        return Optional.empty();
     }
 
     /**
