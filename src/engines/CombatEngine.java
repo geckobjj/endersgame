@@ -15,8 +15,7 @@ public class CombatEngine implements Engine{
     Player me;
     Grid grid;
 
-    private CombatEngine () {
-    }
+    private CombatEngine () {}
 
     public static CombatEngine getInstance() {
         if(combatEngine == null)
@@ -33,6 +32,9 @@ public class CombatEngine implements Engine{
         moveWarriors();
     }
 
+    /**
+     * Move all warriors on the grid.
+     */
     private void moveWarriors() {
         if (!warriors.isEmpty()) {
             Unit dave = warriors.get(0);
@@ -47,6 +49,11 @@ public class CombatEngine implements Engine{
         }
     }
 
+    /**
+     * Sets the target tile for a warrior.
+     * @param warrior Warrior to set target for.
+     * @return Tile
+     */
     private Tile determineWarriorTargetTile(Unit warrior) {
         return targetAdjacentTile(warrior, findEnemyBase());
     }

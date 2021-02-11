@@ -15,12 +15,11 @@ public class EconomyEngine implements Engine{
     List<Unit> workers;
     Grid grid;
     Base base;
+    Player me;
 
 
-    private EconomyEngine() {
-    }
+    private EconomyEngine() {}
 
-    // Singleton implementation
     public static EconomyEngine getInstance() {
         if(economyEngine == null)
             economyEngine = new EconomyEngine();
@@ -34,11 +33,14 @@ public class EconomyEngine implements Engine{
         this.grid = grid;
         this.base = grid.getBase(me);
         this.workers = getUnitsByType(me, grid, UnitType.WORKER);
-        moveWorkers(me);
-        runEconomy(me.dollars, grid.getBase(me), workers);
+        moveWorkers();
+        runEconomy(me.dollars);
     }
 
-    private void moveWorkers(Player me) {
+    /**
+     * Moves all workers on the grid.
+     */
+    private void moveWorkers() {
         for (Unit worker : workers) {
             Tile targetLocation = determineWorkerTargetTile(worker, grid, grid.getBase(me));
             if (unitAtTargetTile(worker, targetLocation)) {
@@ -55,7 +57,11 @@ public class EconomyEngine implements Engine{
         }
     }
 
-    private void runEconomy(int dollars, Base base, List<Unit> workers) {
+    /**
+     * Handles purchasing decisions and actions.
+     * @param dollars dollars to spend on units.
+     */
+    private void runEconomy(int dollars) {
         if(workers.size() < 2) {
             if(dollars >= 10) {
                 base.construct(UnitType.WORKER);
@@ -120,6 +126,11 @@ public class EconomyEngine implements Engine{
         return resources;
     }
 
+    /**
+     * Check to see if a unit has no cargo.
+     * @param unit Unit to check
+     * @return boolean
+     */
     private boolean isMissingCargo(Unit unit) {
         return unit.cargo.isEmpty();
     }

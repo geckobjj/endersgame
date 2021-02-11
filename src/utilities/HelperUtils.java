@@ -79,6 +79,7 @@ public class HelperUtils {
             unit.move(Direction.WEST);
         }
         else {
+            // Contingency wildcard tile to break out of sticky situations!
             Random random = new Random();
             List<Tile> availableTiles = unit.tile.getAdjacentTiles()
                     .stream()
@@ -123,8 +124,15 @@ public class HelperUtils {
     public static Tile targetAdjacentTile(Unit unit, Tile centerTile) {
         List<Tile> adjacentTiles = new ArrayList<>();
         for(Tile tile : centerTile.getAdjacentTiles()) {
-            if (tile.canReceiveUnit() || tile.entity.get().equals(unit)) {
-                adjacentTiles.add(tile);
+            if (tile.canReceiveUnit() || tile.entity.isPresent()) {
+                if (tile.entity.isPresent()) {
+                    if (tile.entity.get().equals(unit)) {
+                        adjacentTiles.add(tile);
+                    }
+                }
+                else {
+                    adjacentTiles.add(tile);
+                }
             }
         }
         Tile closestTile = adjacentTiles.get(0);
