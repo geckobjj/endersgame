@@ -2,6 +2,7 @@ package engines;
 
 import com.ender.game.model.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static utilities.HelperUtils.*;
@@ -36,7 +37,7 @@ public class CombatEngine implements Engine{
     private void moveWarriors() {
         if (!warriors.isEmpty()) {
             Unit dave = warriors.get(0);
-            Tile targetTile = determineWarriorTargetTile();
+            Tile targetTile = determineWarriorTargetTile(dave);
             if (unitAtTargetTile(dave, targetTile) && dave.attackCooldown < 0) {
                 dave.attack(findEnemyBase());
             } else if (!unitAtTargetTile(dave, targetTile)) {
@@ -47,9 +48,26 @@ public class CombatEngine implements Engine{
         }
     }
 
-    private Tile determineWarriorTargetTile() {
+    private Tile determineWarriorTargetTile(Unit warrior) {
+        Tile targetTile = null;
         Tile enemyBase = findEnemyBase();
-        return enemyBase.getAdjacentTiles().get(0);
+        List<Tile> baseTiles = new ArrayList<Tile>();
+        for(Tile tile : enemyBase.getAdjacentTiles()) {
+            if (tile.canReceiveUnit() || tile.entity.get().equals(warrior)) {
+                baseTiles.add(tile);
+            }
+        }
+        targetTile = baseTiles.get(0);
+        double distance = calculateTileDistance(warrior.tile, targetTile);
+        for(Tile tile : baseTiles) {
+            double tileDistance = calculateTileDistance(warrior.tile, tile);
+            if (tileDistance < distance) {
+                targetTile = tile;
+                distance = tileDistance;
+            }
+        }
+        return targetTile;
+        //return enemyBase.getAdjacentTiles().get(0);
     }
 
     /**

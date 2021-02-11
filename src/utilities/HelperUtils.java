@@ -3,6 +3,7 @@ package utilities;
 import com.ender.game.model.*;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 import java.util.stream.Collectors;
 
@@ -77,8 +78,14 @@ public class HelperUtils {
             unit.move(Direction.WEST);
         }
         else {
-            if(unit.tile.getAdjacentTile(Direction.NORTH).get().canReceiveUnit()){
-                unit.move(Direction.NORTH);
+            /*
+            if(unit.tile.getAdjacentTile(Direction.NORTH).isPresent()){
+                if(unit.tile.getAdjacentTile(Direction.NORTH).get().canReceiveUnit()) {
+                    unit.move(Direction.NORTH);
+                }
+                else {
+                    unit.move(Direction.SOUTH);
+                }
             }
             else {
                 unit.move(Direction.SOUTH);
@@ -92,14 +99,13 @@ public class HelperUtils {
                     .get();
             moveUnit(unit, contingencyTile);*/
             // This was the better Random code, but let's try something simpler.
-            /*
+
             Random random = new Random();
             List<Tile> availableTiles = unit.tile.getAdjacentTiles()
                     .stream()
                     .filter(Tile::canReceiveUnit)
                     .collect(Collectors.toList());
             moveUnit(unit, availableTiles.get(random.nextInt(availableTiles.size())));
-             */
         }
     }
 
