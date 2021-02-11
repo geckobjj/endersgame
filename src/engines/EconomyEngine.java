@@ -102,7 +102,23 @@ public class EconomyEngine implements Engine{
         else {
             //Target a tile adjacent to the base
             Tile baseTile = base.tile;
-            targetTile = baseTile.getAdjacentTiles().get(0);
+            //List<Tile> baseTiles = baseTile.getAdjacentTiles().stream().filter(Tile::canReceiveUnit).collect(Collectors.toList());
+            List<Tile> baseTiles = new ArrayList<Tile>();
+            for(Tile tile : baseTile.getAdjacentTiles()) {
+                if (tile.canReceiveUnit() || tile.entity.get().equals(unit)) {
+                    baseTiles.add(tile);
+                }
+            }
+            targetTile = baseTiles.get(0);
+            // Get closest tile to the player.
+            double distance = calculateTileDistance(unit.tile, targetTile);
+            for(Tile tile : baseTiles) {
+                double tileDistance = calculateTileDistance(unit.tile, tile);
+                if (tileDistance < distance) {
+                    targetTile = tile;
+                    distance = tileDistance;
+                }
+            }
         }
         return targetTile;
     }

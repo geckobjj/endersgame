@@ -3,7 +3,6 @@ package utilities;
 import com.ender.game.model.*;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Random;
 import java.util.stream.Collectors;
 
@@ -23,15 +22,67 @@ public class HelperUtils {
 
         // isPresent check not needed due to already checking to see if tile exists that direction
         if(north && unit.tile.getAdjacentTile(Direction.NORTH).get().canReceiveUnit()) {
-            unit.move(Direction.NORTH);
+            // Attempt to clear east/west blocking
+            if(east) {
+                Tile easternTile = unit.tile.getAdjacentTile(Direction.EAST).get();
+                Tile northEasternTile = easternTile.getAdjacentTile(Direction.NORTH).get();
+                if(!northEasternTile.canReceiveUnit() && easternTile.canReceiveUnit()){
+                    unit.move(Direction.EAST);
+                }
+                else {
+                    unit.move(Direction.NORTH);
+                }
+            }
+            else if(west) {
+                Tile westernTile = unit.tile.getAdjacentTile(Direction.WEST).get();
+                Tile northWesternTile = westernTile.getAdjacentTile(Direction.NORTH).get();
+                if(!northWesternTile.canReceiveUnit() && westernTile.canReceiveUnit()){
+                    unit.move(Direction.WEST);
+                }
+                else {
+                    unit.move(Direction.NORTH);
+                }
+            }
+            else {
+                unit.move(Direction.NORTH);
+            }
         } else if (south && unit.tile.getAdjacentTile(Direction.SOUTH).get().canReceiveUnit()) {
-            unit.move(Direction.SOUTH);
+            // Attempt to clear east/west blocking
+            if(east) {
+                Tile easternTile = unit.tile.getAdjacentTile(Direction.EAST).get();
+                Tile southEasternTile = easternTile.getAdjacentTile(Direction.SOUTH).get();
+                if(!southEasternTile.canReceiveUnit() && easternTile.canReceiveUnit()){
+                    unit.move(Direction.EAST);
+                }
+                else {
+                    unit.move(Direction.SOUTH);
+                }
+            }
+            else if (west) {
+                Tile westernTile = unit.tile.getAdjacentTile(Direction.WEST).get();
+                Tile southWesternTile = westernTile.getAdjacentTile(Direction.SOUTH).get();
+                if(!southWesternTile.canReceiveUnit() && westernTile.canReceiveUnit()){
+                    unit.move(Direction.WEST);
+                }
+                else {
+                    unit.move(Direction.SOUTH);
+                }
+            }
+            else {
+                unit.move(Direction.SOUTH);
+            }
         } else if (east && unit.tile.getAdjacentTile(Direction.EAST).get().canReceiveUnit()) {
             unit.move(Direction.EAST);
         } else if (west && unit.tile.getAdjacentTile(Direction.WEST).get().canReceiveUnit()) {
             unit.move(Direction.WEST);
         }
         else {
+            if(unit.tile.getAdjacentTile(Direction.NORTH).get().canReceiveUnit()){
+                unit.move(Direction.NORTH);
+            }
+            else {
+                unit.move(Direction.SOUTH);
+            }
             // So I came up with this contingency tile to try to escape being trapped in
             // an east to west row...  It doesn't work well at all...
             /*
@@ -40,12 +91,15 @@ public class HelperUtils {
                     .findFirst()
                     .get();
             moveUnit(unit, contingencyTile);*/
+            // This was the better Random code, but let's try something simpler.
+            /*
             Random random = new Random();
             List<Tile> availableTiles = unit.tile.getAdjacentTiles()
                     .stream()
                     .filter(Tile::canReceiveUnit)
                     .collect(Collectors.toList());
             moveUnit(unit, availableTiles.get(random.nextInt(availableTiles.size())));
+             */
         }
     }
 
