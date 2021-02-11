@@ -16,7 +16,7 @@ public class EconomyEngine implements Engine{
     Grid grid;
     Base base;
     Player me;
-
+    int dollars;
 
     private EconomyEngine() {}
 
@@ -31,10 +31,13 @@ public class EconomyEngine implements Engine{
     @Override
     public void execute(Player me, Grid grid) {
         this.grid = grid;
+        this.me = me;
         this.base = grid.getBase(me);
+        this.dollars = me.dollars;
         this.workers = getUnitsByType(me, grid, UnitType.WORKER);
+
         moveWorkers();
-        runEconomy(me.dollars);
+        runEconomy();
     }
 
     /**
@@ -59,10 +62,10 @@ public class EconomyEngine implements Engine{
 
     /**
      * Handles purchasing decisions and actions.
-     * @param dollars dollars to spend on units.
      */
-    private void runEconomy(int dollars) {
-        if(workers.size() < 2) {
+    private void runEconomy() {
+        // Need to see if 2 or 3 workers is faster.
+        if(workers.size() < 3) {
             if(dollars >= 10) {
                 base.construct(UnitType.WORKER);
             }

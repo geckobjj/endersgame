@@ -29,6 +29,7 @@ public class CombatEngine implements Engine{
         warriors = getUnitsByType(me, grid, UnitType.WARRIOR);
         this.me = me;
         this.grid = grid;
+
         moveWarriors();
     }
 
