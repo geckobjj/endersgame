@@ -13,6 +13,8 @@ public class EconomyEngine implements Engine{
     private static EconomyEngine economyEngine = null;
 
     List<Unit> workers;
+    List<Unit> warriors;
+    List<Unit> archers;
     Grid grid;
     Base base;
     Player me;
@@ -35,9 +37,12 @@ public class EconomyEngine implements Engine{
         this.base = grid.getBase(me);
         this.dollars = me.dollars;
         this.workers = getUnitsByType(me, grid, UnitType.WORKER);
+        this.warriors = getUnitsByType(me, grid, UnitType.WARRIOR);
+        this.archers = getUnitsByType(me, grid, UnitType.ARCHER);
 
         moveWorkers();
-        runEconomy();
+        // 3,1,0 works well so far
+        runEconomy(3, 1, 1);
     }
 
     /**
@@ -63,15 +68,19 @@ public class EconomyEngine implements Engine{
     /**
      * Handles purchasing decisions and actions.
      */
-    private void runEconomy() {
+    private void runEconomy(int workerMax, int warriorMax, int archerMax) {
         // Need to see if 2 or 3 workers is faster.
-        if(workers.size() < 3) {
+        // Always replenish workers first.
+        if(workers.size() < workerMax) {
             if(dollars >= 10) {
                 base.construct(UnitType.WORKER);
             }
         } else {
-            if(dollars >= 50) {
+            if(dollars >= 50 && warriors.size() < warriorMax) {
                 base.construct(UnitType.WARRIOR);
+            }
+            if(dollars >= 75 && archers.size() < archerMax) {
+                base.construct(UnitType.ARCHER);
             }
         }
     }

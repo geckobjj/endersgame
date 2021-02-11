@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Random;
 import java.util.stream.Collectors;
 
+//TODO Moving workers need to recognize one another and avoid graciously.
 public class HelperUtils {
 
     /**
