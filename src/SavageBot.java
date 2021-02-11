@@ -7,8 +7,6 @@ import engines.EconomyEngine;
 
 public class SavageBot implements Bot {
 
-    //EconomyEngine eco = new EconomyEngine();
-
     @Override
     public String getName() {
         return "SavageBot"; //+ HelperUtils.generateSalt();
@@ -26,11 +24,8 @@ public class SavageBot implements Bot {
 
     @Override
     public void act(Player me, Grid grid) {
-        //System.out.println(me);
-        //eco.execute(me, grid); // Execute economy engine
         EconomyEngine.getInstance().execute(me, grid);
         CombatEngine.getInstance().execute(me, grid); // Execute combat engine
-        //grid.getUnits(me).forEach(unit -> unit.move(Direction.NORTH));
     }
 
     public static void main(String[] args) {
@@ -39,7 +34,7 @@ public class SavageBot implements Bot {
            .openWebBrowserWhenMatchStarts();
 
         // Option 2: wait in a queue to play against other people's bots
-        //EndersGameClient.run(new SavageBot())
+        // EndersGameClient.run(new SavageBot())
         // .openWebBrowserWhenMatchStarts();
     }
 }

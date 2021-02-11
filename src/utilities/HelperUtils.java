@@ -11,8 +11,8 @@ public class HelperUtils {
 
     /**
      * Moves a Unit one step closer to the target Tile
-     * @param unit
-     * @param targetTile
+     * @param unit The unit to move
+     * @param targetTile The unit's destination
      */
     public static void moveUnit(Unit unit, Tile targetTile) {
         // Determine direction
@@ -90,9 +90,9 @@ public class HelperUtils {
 
     /**
      * Calculates the distance between two tiles
-     * @param tileA
-     * @param tileB
-     * @return
+     * @param tileA A tile
+     * @param tileB Another tile
+     * @return The double hypotenuse of the two tiles
      */
     public static double calculateTileDistance(Tile tileA, Tile tileB) {
         double a = Math.abs(tileA.i - tileB.i);
@@ -102,9 +102,9 @@ public class HelperUtils {
 
     /**
      * Checks to see if the unit has arrived at it's target
-     * @param unit
-     * @param targetTile
-     * @return
+     * @param unit The unit to check
+     * @param targetTile The unit's destination
+     * @return boolean has unit arrived?
      */
     public static boolean unitAtTargetTile(Unit unit, Tile targetTile) {
         return unit.tile.i == targetTile.i && unit.tile.j == targetTile.j;
@@ -116,9 +116,9 @@ public class HelperUtils {
 
     /**
      * Calculate which adjacent tile is closest to a unit
-     * @param unit
-     * @param centerTile
-     * @return
+     * @param unit unit that is looking for available adjacent tiles to the target
+     * @param centerTile the tile in the center.  We want to target its available (max 4) adjacent tiles.
+     * @return tile that is the closest to the unit.
      */
     public static Tile targetAdjacentTile(Unit unit, Tile centerTile) {
         List<Tile> adjacentTiles = new ArrayList<>();

@@ -53,7 +53,7 @@ public class CombatEngine implements Engine{
 
     /**
      * Locates the enemy base
-     * @return
+     * @return Tile of the enemy base
      */
     private Tile findEnemyBase() {
         for (Tile tile : grid.getTiles()) {

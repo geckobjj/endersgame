@@ -69,14 +69,15 @@ public class EconomyEngine implements Engine{
 
     /**
      * Determine the tile that a worker is going to target for travel
-     * @param unit
-     * @param grid
-     * @param base
-     * @return
+     * @param worker The worker unit
+     * @param grid The game grid
+     * @param base The player base where worker deposits resources
+     * @return Tile that the worker will travel to
      */
-    private Tile determineWorkerTargetTile(Unit unit, Grid grid, Base base) {
-        Tile targetTile = null;
-        if(isMissingCargo(unit)) {
+    private Tile determineWorkerTargetTile(Unit worker, Grid grid, Base base) {
+        Tile targetTile;
+        // Check to see if worker is carrying resources
+        if(isMissingCargo(worker)) {
 
             // Target a tile with resources
             List<Tile> resourceTiles = findResources(grid);
@@ -99,19 +100,19 @@ public class EconomyEngine implements Engine{
             }
         }
         else {
-            //Target a tile adjacent to the base
-            targetTile = targetAdjacentTile(unit, base.tile);
+            //Target a tile adjacent to the base to deposit resources
+            targetTile = targetAdjacentTile(worker, base.tile);
         }
         return targetTile;
     }
 
     /**
      * Return a List of all tiles with resources
-     * @param grid
-     * @return
+     * @param grid The game grid
+     * @return A Tile List of every tile containing resources
      */
     private List<Tile> findResources(Grid grid) {
-        List<Tile> resources = new ArrayList<Tile>();
+        List<Tile> resources = new ArrayList<>();
         for (Tile tile : grid.getTiles()) {
             if (tile.resourceType.isPresent())
                 resources.add(tile);
@@ -121,9 +122,5 @@ public class EconomyEngine implements Engine{
 
     private boolean isMissingCargo(Unit unit) {
         return unit.cargo.isEmpty();
-    }
-
-    private void updateWorkerList() {
-
     }
 }
