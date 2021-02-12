@@ -8,8 +8,8 @@ import java.util.Random;
 import java.util.stream.Collectors;
 
 //TODO Moving workers need to recognize one another and avoid graciously.
-//TODO Calculate paths (no used paths) (different to and from trips)
-//TODO Implement A*
+//TODO Calculate paths (different to and from trips)*
+//TODO Implement A* / Branch and Bound
 public class HelperUtils {
 
     /**
@@ -83,6 +83,7 @@ public class HelperUtils {
         }
         else {
             // Contingency wildcard tile to break out of sticky situations!
+            // Creates noise
             Random random = new Random();
             List<Tile> availableTiles = unit.tile.getAdjacentTiles()
                     .stream()
